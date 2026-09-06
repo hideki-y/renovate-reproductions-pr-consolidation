@@ -1,0 +1,34 @@
+{
+  extends: ["config:recommended"],
+
+  // Without this rule, Renovate opens one PR per outdated dependency:
+  // requests + click (project-a) and flask (project-b) = 3 PRs.
+  // Grouping both project directories into one packageRule consolidates
+  // all of them into a single PR instead.
+  packageRules: [
+    {
+      matchFileNames: ["project-a/**", "project-b/**"],
+      groupName: "consolidated dependencies",
+      groupSlug: "consolidated",
+    },
+
+    // Bump patch version in pyproject.toml (and uv.lock) when dependencies
+    // are updated. {{packageFileDir}} resolves per-update, so this one rule
+    // covers both project-a/ and project-b/ with no path duplication.
+    {
+      matchUpdateTypes: ["major", "minor", "patch"],
+      bumpVersions: [
+        {
+          bumpType: "patch",
+          filePatterns: ["{{packageFileDir}}/pyproject.toml"],
+          matchStrings: ["version\\s*=\\s*\"(?<version>[^\"]+)\""],
+        },
+        {
+          bumpType: "patch",
+          filePatterns: ["{{packageFileDir}}/uv.lock"],
+          matchStrings: ["name = \"[^\"]+\"\\nversion = \"(?<version>[^\"]+)\"\\nsource = \\{ (?:editable|virtual) = \"\\.\" \\}"],
+        },
+      ],
+    },
+  ],
+}
