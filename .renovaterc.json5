@@ -20,12 +20,12 @@
       bumpVersions: [
         {
           bumpType: "patch",
-          filePatterns: ["^({{#each (distinct (lookupArray upgrades \"packageFileDir\"))}}{{{.}}}{{#unless @last}}|{{/unless}}{{/each}})/pyproject.toml"],
+          filePatterns: ["/^({{#each (distinct (lookupArray upgrades \"packageFileDir\"))}}{{{.}}}{{#unless @last}}|{{/unless}}{{/each}})\\/pyproject\\.toml$/"],
           matchStrings: ["version\\s*=\\s*\"(?<version>[^\"]+)\""],
         },
         {
           bumpType: "patch",
-          filePatterns: ["^({{#each (distinct (lookupArray upgrades \"packageFileDir\"))}}{{{.}}}{{#unless @last}}|{{/unless}}{{/each}})/uv.lock"],
+          filePatterns: ["/^({{#each (distinct (lookupArray upgrades \"packageFileDir\"))}}{{{.}}}{{#unless @last}}|{{/unless}}{{/each}})\\/uv\\.lock$/"],
           matchStrings: ["name = \"[^\"]+\"\\nversion = \"(?<version>[^\"]+)\"\\nsource = \\{ (?:editable|virtual) = \"\\.\" \\}"],
         },
       ],
